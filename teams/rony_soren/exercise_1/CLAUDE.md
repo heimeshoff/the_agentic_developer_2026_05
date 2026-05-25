@@ -43,7 +43,16 @@ dotnet test Rebalancer.slnx
 dotnet test Rebalancer.Tests --filter "FullyQualifiedName~TestName"
 ```
 
+## Agent Strategy
+
+Delegate coding work to a sub-agent (using the Agent tool) to preserve the main conversation's context window. The main thread handles planning, review, and user interaction — the sub-agent writes and tests the code.
+
+Give each sub-agent a self-contained prompt: file paths, what to change, expected tests, and build/test commands.
+
 ## Architecture
 
 - Source code lives in `src/`
-- Update this section as the application takes shape — describe the high-level structure, key modules, and data flow so future sessions can orient quickly.
+- `src/Rebalancer/` — class library with domain types and rebalance logic
+  - `Portfolio.cs` — records (`TargetAllocation`, `Holding`, `Trade`), enum (`TradeAction`), and `PortfolioValidator`
+  - `PortfolioRebalancer.cs` — static `Rebalance()` method: computes trades to move from current holdings to target allocation
+- `src/Rebalancer.Tests/` — xUnit tests for validation and rebalance scenarios
