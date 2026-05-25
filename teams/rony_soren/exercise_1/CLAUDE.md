@@ -32,16 +32,18 @@ Trunk-based development using [mob.sh](https://mob.sh) for pair/mob programming:
 
 ## Build / Test / Run
 
-_No commands yet._ Fill in as tooling is added:
-
 ```
 # Build:
+dotnet build Rebalancer.slnx
+
 # Test (all):
+dotnet test Rebalancer.slnx
+
 # Test (single):
-# Lint:
-# Dev server:
+dotnet test Rebalancer.Tests --filter "FullyQualifiedName~TestName"
 ```
 
 ## Architecture
 
-_No code yet._ Update this section as the application takes shape — describe the high-level structure, key modules, and data flow so future sessions can orient quickly.
+- Source code lives in `src/`
+- Update this section as the application takes shape — describe the high-level structure, key modules, and data flow so future sessions can orient quickly.
