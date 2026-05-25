@@ -33,9 +33,12 @@ We are building this in **Flutter**. Reasons:
 
 The app uses **event sourcing**. State is derived by replaying an append-only log of events; do not mutate persisted state in place. New features should be modeled as events first (what happened), then projections/read models on top.
 
-## Quality goal & development workflow
+## Quality goals
 
-**Primary quality goal: all calculations in the app must be correct.**
+1. **All calculations in the app must be correct.** This is the primary quality bar — everything else is secondary to getting the numbers right.
+2. **Optimize for the web build.** Flutter targets mobile, desktop, and web from one codebase, but the web build is our primary form factor. When trade-offs come up (layout, input affordances, navigation patterns, performance budgets), pick what's best on the web — mobile and desktop should still work, but they're not where we tune.
+
+## Development workflow
 
 Work strictly **test-driven**, one function at a time:
 
