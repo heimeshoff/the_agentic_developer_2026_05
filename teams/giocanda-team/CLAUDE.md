@@ -30,6 +30,16 @@ The exact feature set, data model, and user experience are intentionally open-en
 - Prioritize breadth of exploration over production polish
 - The goal is to discover what works through experimentation
 
+### Accessibility Requirements
+
+**All features must be fully accessible and follow WCAG 2.1/2.2 principles.**
+
+Use these tools to ensure accessibility:
+- **Agent:** `a11y-developer` — Build features with accessibility from the start
+- **Skill:** `/accessibility-check` — Validate WCAG compliance before committing
+
+The application must be usable by people with visual, motor, auditory, and cognitive impairments. This is not optional—accessibility is a core requirement from day one.
+
 ## Folder Structure and Naming Convention
 
 **IMPORTANT:** Follow the exact naming convention from `/instructions/instruction.md`:
