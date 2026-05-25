@@ -1,0 +1,22 @@
+{
+  "hooks": {
+    "user-prompt-submit": {
+      "description": "Validate conventions before processing user requests",
+      "command": "echo '\n⚠️  Reminder: Check naming conventions (exercise_one not exercise_1) and git branch (gioconda-team)'"
+    }
+  },
+  "permissions": {
+    "allow": [
+      {
+        "tool": "Bash",
+        "pattern": "^(ls|pwd|git status|git branch).*",
+        "reason": "Allow read-only git and filesystem operations for validation"
+      },
+      {
+        "tool": "Read",
+        "pattern": ".*/instructions/.*\\.md$",
+        "reason": "Allow reading instruction files for validation"
+      }
+    ]
+  }
+}
