@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# dev-budget-app driver screenshots (scratch output, not source)
+.claude/skills/dev-budget-app/*.png
