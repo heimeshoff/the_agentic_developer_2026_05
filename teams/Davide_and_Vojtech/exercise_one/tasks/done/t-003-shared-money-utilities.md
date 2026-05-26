@@ -1,10 +1,10 @@
 ---
 id: t-003
 title: Shared money utilities + Vitest
-status: todo
+status: done
 type: scaffold
 created: 2026-05-26
-completed:
+completed: 2026-05-26
 commit:
 depends_on: [t-001]
 files:
