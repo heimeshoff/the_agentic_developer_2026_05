@@ -1,10 +1,10 @@
 ---
 id: t-002
 title: Local Postgres + migration runner
-status: todo
+status: done
 type: scaffold
 created: 2026-05-26
-completed:
+completed: 2026-05-26
 commit:
 depends_on: [t-001]
 files:
