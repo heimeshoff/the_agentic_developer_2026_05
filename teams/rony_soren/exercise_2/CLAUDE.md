@@ -52,7 +52,3 @@ Give each sub-agent a self-contained prompt: file paths, what to change, expecte
 ## Architecture
 
 - Source code lives in `src/`
-- `src/Rebalancer/` — class library with domain types and rebalance logic
-  - `Portfolio.cs` — records (`TargetAllocation`, `Holding`, `Trade`), enum (`TradeAction`), and `PortfolioValidator`
-  - `PortfolioRebalancer.cs` — static `Rebalance()` method: computes trades to move from current holdings to target allocation
-- `src/Rebalancer.Tests/` — xUnit tests for validation and rebalance scenarios
