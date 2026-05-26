@@ -1,5 +1,5 @@
 ---
-name: dev-budget-app
+name: dev-skill
 description: >-
   Implement, build, and verify React + TypeScript features for team
   michele-luca's budgeting app (Exercise One). Use when adding a feature,

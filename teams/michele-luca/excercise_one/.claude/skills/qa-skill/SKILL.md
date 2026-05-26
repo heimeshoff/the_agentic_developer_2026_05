@@ -1,5 +1,5 @@
 ---
-name: qa-budget-app
+name: qa-skill
 description: >-
   Run code QA and review the budget app before a commit, PR, or sign-off.
   Use to lint, typecheck, build, run all quality gates at once, audit a diff,
