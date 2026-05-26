@@ -1,7 +1,7 @@
 ---
 id: cash-inflow-001
 title: Expose changed-signal for Forecasting consumers
-status: backlog
+status: todo
 type: feature
 context: cash-inflow
 created: 2026-04-26

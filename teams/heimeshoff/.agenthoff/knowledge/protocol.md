@@ -5,6 +5,15 @@ Newest entries on top.
 
 ---
 
+## 2026-05-26 -- Model / Promoted: cash-inflow-001 - Expose changed-signal for Forecasting consumers
+
+**Type:** Model / Promote
+**BC:** cash-inflow
+**From → To:** backlog → todo
+**Note:** Dependency `forecasting-011` (host runtime) is still in backlog — `work` will not dispatch this task until that lands.
+
+---
+
 ## 2026-04-26 -- Model / Refined: full Forecasting backlog + cross-BC contracts
 
 **Type:** Model / Refine (autonomous batch)
