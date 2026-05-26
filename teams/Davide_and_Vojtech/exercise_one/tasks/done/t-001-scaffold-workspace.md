@@ -1,10 +1,10 @@
 ---
 id: t-001
 title: Scaffold pnpm workspace + tooling
-status: doing
+status: done
 type: scaffold
 created: 2026-05-26
-completed:
+completed: 2026-05-26
 commit:
 depends_on: []
 files:
