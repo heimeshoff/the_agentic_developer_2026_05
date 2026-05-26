@@ -1,10 +1,10 @@
 ---
 id: t-005
 title: Income domain schemas (shared)
-status: todo
+status: done
 type: feature
 created: 2026-05-26
-completed:
+completed: 2026-05-26
 commit:
 depends_on: [t-003]
 files:
