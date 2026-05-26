@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignore": ["dist", "node_modules", "**/*.d.ts"]
+    "ignore": ["dist", "node_modules", "**/*.d.ts", "**/test-results", "**/playwright-report"]
   },
   "formatter": {
     "enabled": true,
