@@ -112,4 +112,11 @@ public class BudgetAccountTest {
     void getNameReturnsName() {
         assertEquals("Savings", new BudgetAccount("Savings", 0).getName());
     }
+
+    @Test
+    void notificationTransactionDoesNotAffectBalance() {
+        BudgetAccount account = new BudgetAccount("Savings", 500.0);
+        account.addTransaction(new Transaction("t1", Transaction.TransactionType.NOTIFICATION, 1.0, "Balance alert", TODAY));
+        assertEquals(500.0, account.getBalance());
+    }
 }

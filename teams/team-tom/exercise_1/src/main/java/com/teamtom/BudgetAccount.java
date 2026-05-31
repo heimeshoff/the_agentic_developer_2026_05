@@ -30,7 +30,7 @@ public class BudgetAccount {
         for (Transaction t : transactions) {
             if (t.getType() == Transaction.TransactionType.CREDIT) {
                 balance += t.getAmount();
-            } else {
+            } else if (t.getType() == Transaction.TransactionType.DEBIT) {
                 balance -= t.getAmount();
             }
         }
