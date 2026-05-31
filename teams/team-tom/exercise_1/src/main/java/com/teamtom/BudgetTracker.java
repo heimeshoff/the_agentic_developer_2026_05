@@ -2,7 +2,9 @@ package com.teamtom;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BudgetTracker {
 
@@ -37,6 +39,18 @@ public class BudgetTracker {
             total += account.getBalance();
         }
         return total;
+    }
+
+    public Map<String, Double> getSpendingByCategory() {
+        Map<String, Double> totals = new HashMap<>();
+        for (BudgetAccount account : accounts) {
+            for (Transaction t : account.getTransactions()) {
+                if (t.getType() == Transaction.TransactionType.DEBIT) {
+                    totals.merge(t.getCategory(), t.getAmount(), Double::sum);
+                }
+            }
+        }
+        return totals;
     }
 
     public String getSummary() {

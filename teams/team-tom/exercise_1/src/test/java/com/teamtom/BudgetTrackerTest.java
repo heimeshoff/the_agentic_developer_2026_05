@@ -1,6 +1,8 @@
 package com.teamtom;
 
 import org.junit.jupiter.api.Test;
+import java.time.LocalDate;
+import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BudgetTrackerTest {
@@ -56,6 +58,24 @@ public class BudgetTrackerTest {
     void throwsOnAccountNotFound() {
         BudgetTracker tracker = new BudgetTracker();
         assertThrows(IllegalArgumentException.class, () -> tracker.getAccount("Missing"));
+    }
+
+    @Test
+    void totalSpendingByCategory() {
+        BudgetTracker tracker = new BudgetTracker();
+        BudgetAccount checking = new BudgetAccount("Checking", 2000.0);
+        LocalDate today = LocalDate.now();
+        checking.addTransaction(new Transaction("t1", Transaction.TransactionType.DEBIT, 50.0, "Groceries run", today, "Food"));
+        checking.addTransaction(new Transaction("t2", Transaction.TransactionType.DEBIT, 30.0, "Bus pass", today, "Transport"));
+        checking.addTransaction(new Transaction("t3", Transaction.TransactionType.DEBIT, 20.0, "Lunch", today, "Food"));
+        checking.addTransaction(new Transaction("t4", Transaction.TransactionType.CREDIT, 100.0, "Salary", today, "Income"));
+        tracker.addAccount(checking);
+
+        Map<String, Double> spending = tracker.getSpendingByCategory();
+
+        assertEquals(70.0, spending.get("Food"));
+        assertEquals(30.0, spending.get("Transport"));
+        assertFalse(spending.containsKey("Income"));
     }
 
     @Test
