@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class Transaction {
 
     public enum TransactionType {
-        CREDIT, DEBIT
+        CREDIT, DEBIT, NOTIFICATION
     }
 
     private final String id;

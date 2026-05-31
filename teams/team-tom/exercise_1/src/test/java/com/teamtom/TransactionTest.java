@@ -72,6 +72,12 @@ public class TransactionTest {
     }
 
     @Test
+    void notificationTypeIsSupported() {
+        Transaction t = new Transaction("t1", Transaction.TransactionType.NOTIFICATION, 1.0, "Balance alert", TODAY);
+        assertEquals(Transaction.TransactionType.NOTIFICATION, t.getType());
+    }
+
+    @Test
     void toStringContainsKeyFields() {
         String s = credit(100.0).toString();
         assertTrue(s.contains("t1"));
