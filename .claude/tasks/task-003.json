@@ -1,0 +1,19 @@
+{
+  "task_id": "task-003",
+  "title": "BudgetAccount with transaction history",
+  "description": "Implement a BudgetAccount that records transactions and derives its balance from them, giving a full audit trail.",
+  "language": "java",
+  "output_path": "teams/team-tom/exercise_1/src/main/java/com/teamtom/BudgetAccount.java",
+  "requirements": [
+    "BudgetAccount is created with a non-null, non-blank name and an opening balance (double >= 0)",
+    "addTransaction(Transaction t) records the transaction; throws IllegalArgumentException if t is null",
+    "getBalance() returns the opening balance plus all CREDITs minus all DEBITs",
+    "getTransactions() returns an unmodifiable list of all recorded transactions in insertion order",
+    "getName() returns the account name",
+    "addTransaction throws IllegalStateException if a DEBIT would make the balance negative",
+    "toString() returns a readable summary, e.g. 'BudgetAccount[name=Savings, balance=1500.00, transactions=3]'"
+  ],
+  "context": "Package is com.teamtom, Java 21. Depends on Transaction (task-002). Follow the style of BankAccount.java already in the package.",
+  "assigned_by": "task-orchestrator",
+  "dependencies": ["task-002"]
+}

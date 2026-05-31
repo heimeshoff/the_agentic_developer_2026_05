@@ -1,0 +1,19 @@
+{
+  "task_id": "task-002",
+  "title": "Transaction value object",
+  "description": "Implement an immutable Transaction class representing a single financial event on an account.",
+  "language": "java",
+  "output_path": "teams/team-tom/exercise_1/src/main/java/com/teamtom/Transaction.java",
+  "requirements": [
+    "Transaction is immutable — all fields set at construction, no setters",
+    "Fields: String id, TransactionType type (enum: CREDIT, DEBIT), double amount, String description, java.time.LocalDate date",
+    "TransactionType enum is defined as a nested public enum inside Transaction",
+    "Constructor throws IllegalArgumentException if amount <= 0",
+    "Constructor throws IllegalArgumentException if id, description, or date is null or blank",
+    "Getters: getId(), getType(), getAmount(), getDescription(), getDate()",
+    "toString() returns a readable summary, e.g. 'Transaction[id=t1, type=CREDIT, amount=100.00, description=Salary, date=2026-05-31]'"
+  ],
+  "context": "Package is com.teamtom, Java 21. No third-party dependencies. This class will be used by BudgetAccount (task-003).",
+  "assigned_by": "task-orchestrator",
+  "dependencies": []
+}
