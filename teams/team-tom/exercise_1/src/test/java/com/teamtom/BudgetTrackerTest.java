@@ -79,6 +79,18 @@ public class BudgetTrackerTest {
     }
 
     @Test
+    void throwsWhenTransactionWouldExceedMonthlyLimit() {
+        BudgetTracker tracker = new BudgetTracker();
+        tracker.setMonthlySpendingLimit(100.0);
+        tracker.addAccount(new BudgetAccount("Checking", 2000.0));
+        LocalDate today = LocalDate.now();
+        tracker.addTransaction("Checking", new Transaction("t1", Transaction.TransactionType.DEBIT, 60.0, "Groceries", today, "Food"));
+        assertThrows(IllegalStateException.class, () ->
+            tracker.addTransaction("Checking", new Transaction("t2", Transaction.TransactionType.DEBIT, 50.0, "Dinner", today, "Food"))
+        );
+    }
+
+    @Test
     void getSummaryContainsAllAccountsAndTotal() {
         BudgetTracker tracker = new BudgetTracker();
         tracker.addAccount(account("Savings", 1000.0));
