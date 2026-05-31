@@ -91,6 +91,21 @@ public class BudgetTrackerTest {
     }
 
     @Test
+    void spendingByCategoryExcludesNotificationTransactions() {
+        BudgetTracker tracker = new BudgetTracker();
+        BudgetAccount checking = new BudgetAccount("Checking", 2000.0);
+        LocalDate today = LocalDate.now();
+        checking.addTransaction(new Transaction("t1", Transaction.TransactionType.DEBIT, 50.0, "Groceries", today, "Food"));
+        checking.addTransaction(new Transaction("t2", Transaction.TransactionType.NOTIFICATION, 99.0, "Low balance alert", today, "Alerts"));
+        tracker.addAccount(checking);
+
+        Map<String, Double> spending = tracker.getSpendingByCategory();
+
+        assertEquals(50.0, spending.get("Food"));
+        assertFalse(spending.containsKey("Alerts"));
+    }
+
+    @Test
     void getSummaryContainsAllAccountsAndTotal() {
         BudgetTracker tracker = new BudgetTracker();
         tracker.addAccount(account("Savings", 1000.0));
