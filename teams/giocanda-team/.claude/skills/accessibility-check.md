@@ -7,6 +7,52 @@ description: Validate application accessibility and WCAG 2.1/2.2 compliance
 
 This skill validates that the application meets WCAG (Web Content Accessibility Guidelines) principles and is fully accessible to users with disabilities.
 
+## Optimization Notes
+
+**This skill should:**
+- Use `haiku` model for static analysis (HTML structure, ARIA, contrast)
+- Use `sonnet` model only for complex semantic analysis or ambiguous cases
+- Receive specific file paths to check (not entire codebase)
+- Return structured findings (severity, location, fix)
+- Limit scope to changed files when possible
+
+**Invocation pattern:**
+```javascript
+// For single file/component check
+const result = await agent(
+  'Check accessibility of src/components/TransactionForm.tsx against WCAG 2.1 AA',
+  {
+    label: 'a11y-check',
+    model: 'haiku',
+    schema: {
+      type: 'object',
+      properties: {
+        critical: { type: 'array', items: { type: 'object' } },
+        important: { type: 'array', items: { type: 'object' } },
+        passes: { type: 'array', items: { type: 'string' } }
+      }
+    }
+  }
+);
+
+// For comprehensive audit (use workflow with parallel checks)
+pipeline(
+  changedFiles.filter(f => f.endsWith('.tsx')),
+  file => agent(`Check a11y: ${file}`, {model: 'haiku', schema: A11Y_SCHEMA})
+);
+```
+
+**Context needed:**
+- File path(s) to check
+- Framework/library used (React/Vue/HTML)
+- Target WCAG level (A/AA/AAA) - default to AA
+
+**Context NOT needed:**
+- Business logic
+- API endpoints
+- Database schemas
+- Full git history
+
 ## WCAG Principles (POUR)
 
 ### 1. Perceivable

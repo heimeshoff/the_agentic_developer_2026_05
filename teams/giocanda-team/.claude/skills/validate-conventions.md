@@ -7,6 +7,34 @@ description: Validate that the team is following workshop naming conventions and
 
 This skill validates that the Gioconda team's work follows the workshop conventions defined in `/instructions/instruction.md`.
 
+## Optimization Notes
+
+**This skill should:**
+- Use `haiku` model for fast validation
+- Read only necessary files (instruction.md, CLAUDE.md, directory structure)
+- Return concise structured output (pass/warn/fail with specific locations)
+- Avoid reading full codebase or implementation files
+
+**Invocation pattern:**
+```javascript
+// In workflow or main orchestrator
+const result = await agent(
+  'Validate workshop conventions: check exercise folder naming, git branch, and CLAUDE.md alignment',
+  {
+    label: 'validate-conventions',
+    model: 'haiku',
+    schema: {
+      type: 'object',
+      properties: {
+        passes: { type: 'array', items: { type: 'string' } },
+        warnings: { type: 'array', items: { type: 'object' } },
+        errors: { type: 'array', items: { type: 'object' } }
+      }
+    }
+  }
+);
+```
+
 ## What to check
 
 1. **Naming conventions**

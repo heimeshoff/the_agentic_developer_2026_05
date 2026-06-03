@@ -35,10 +35,24 @@ The exact feature set, data model, and user experience are intentionally open-en
 **All features must be fully accessible and follow WCAG 2.1/2.2 principles.**
 
 Use these tools to ensure accessibility:
-- **Agent:** `a11y-developer` — Build features with accessibility from the start
+- **Agent:** `a11y-developer` — Build features with accessibility from the start (uses `haiku` for efficiency)
 - **Skill:** `/accessibility-check` — Validate WCAG compliance before committing
 
 The application must be usable by people with visual, motor, auditory, and cognitive impairments. This is not optional—accessibility is a core requirement from day one.
+
+### Agent Optimization
+
+**All agents and skills are optimized for minimal context usage.** See `.claude/AGENT_OPTIMIZATION.md` for:
+- Model selection guidelines (haiku vs sonnet vs opus)
+- Structured output patterns (JSON schemas)
+- Parallel execution strategies
+- Communication protocols (minimal context in/out)
+
+Key principles:
+- Agents receive only the context they need (specific file paths, not entire codebase)
+- Agents return structured JSON (no verbose explanations)
+- Use `haiku` for validation/generation, `sonnet` only for complex reasoning
+- Run independent checks in parallel to reduce wall-clock time
 
 ## Folder Structure and Naming Convention
 
