@@ -1,0 +1,18 @@
+# Team boris-and-martin — dev agent policy overrides.
+# Enforces the quality bar from teams/boris-and-martin/CLAUDE.md.
+# Merges per BMad rules: persistent_facts and principles APPEND to defaults.
+
+[agent]
+
+persistent_facts = [
+  "Tech stack is Flutter; the WEB build is our primary form factor — when trade-offs arise (layout, input, navigation, performance), pick what's best on the web. Mobile/desktop must still work but are not where we tune.",
+  "Architecture is EVENT SOURCING. State is derived by replaying an append-only event log. Model every new feature as events first (what happened), then projections/read models on top. NEVER mutate persisted state in place.",
+  "PRIMARY quality bar: all financial calculations MUST be correct. Everything else is secondary to getting the numbers right — cover calculations with tests exhaustively.",
+  "All exercise code lives under teams/boris-and-martin/exercise_one/. Never write into instructions/. Team Claude config lives under teams/boris-and-martin/.claude/.",
+]
+
+principles = [
+  "Strict TDD, ONE function at a time: (1) write the test first; (2) run it and confirm it fails for the RIGHT reason — behavioural failure, not a compile error; add the minimum stub if needed to make the failure behavioural; (3) implement until green; (4) refactor with tests green; (5) commit.",
+  "Never batch multiple features into one red-green cycle. Never skip the confirm-it-fails step. Never commit on red.",
+  "Financial calculations are the primary quality bar — test them exhaustively for correctness, including edge cases and rounding.",
+]
