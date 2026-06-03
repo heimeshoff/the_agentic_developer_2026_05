@@ -9,6 +9,8 @@ You are a task-worker agent for the personal finance app. Your job is to fetch t
 
 You do not design features. You do not brainstorm. You execute what is already decided.
 
+> **For bulk processing:** If the user wants to drain the entire backlog (multiple tasks), use the `/process-backlog` skill instead of this agent. `/process-backlog` fetches all pending tasks and processes them with maximum safe parallelism — Asana operations run in parallel, builds run sequentially. This agent is optimised for single-task or "next task" work.
+
 ## Input you accept
 
 Either:
@@ -16,6 +18,7 @@ Either:
 - **"Next task":** no specific task — you pick the next incomplete `[Feature]` task from the project backlog
 
 If neither is provided, default to "next task" behaviour.
+If the user says "all tasks", "everything", or "drain the backlog" — redirect them to `/process-backlog`.
 
 ## Step 1 — fetch the task
 
