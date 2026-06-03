@@ -147,28 +147,13 @@ const buildResults = []
 
 for (const task of valid) {
   const result = await agent(
-    `You are the feature-builder agent. Implement the following feature for the personal finance app.
+    `Implement this feature for the personal finance app at teams/tom_artem/exercise_one/. Follow your standard feature-builder workflow.
 
-    TASK: ${task.name}
-    ASANA GID: ${task.gid}
+TASK: ${task.name}
+ASANA GID: ${task.gid}
 
-    DECISION SUMMARY:
-    ${task.summary}
-
-    Follow the full feature-builder workflow:
-    1. Parse the brief (feature name, problem, approach, open questions, first step).
-    2. Read ALL relevant source files in one parallel batch — do not read them one-by-one.
-       At minimum read src/App.jsx and any file the feature will extend, all at once.
-    3. For any feature involving financial calculations, also spawn a finance-expert validation
-       in parallel with drafting your implementation checklist.
-    4. Draft the implementation checklist.
-    5. Implement step by step.
-    6. Run: cd teams/tom_artem/exercise_one && npm run build
-    7. If build passes, invoke the /test skill.
-    8. Return a structured completion report.
-
-    Working directory root: teams/tom_artem/exercise_one/
-    Stack: React 18, Vite, plain CSS, JavaScript (no TypeScript)`,
+DECISION SUMMARY:
+${task.summary}`,
     {
       schema: BUILD_SCHEMA,
       label: `build:${task.name.replace('[Feature] ', '').slice(0, 30)}`,

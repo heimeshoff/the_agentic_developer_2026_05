@@ -39,7 +39,6 @@ For targeted work that doesn't come from a brainstorm (bug fixes, small componen
 | `feature-builder` | End-to-end feature implementation from a brainstorm decision summary; reads files in parallel; auto-triggers `finance-expert` for financial logic |
 | `developer` | Targeted code changes: bug fixes, component edits, refactoring |
 | `finance-expert` | Validates financial logic, rules, and calculations — does not write code |
-| `task-creator` | Turns a brainstorm decision summary into a structured Asana task |
 | `task-worker` | Fetches a single Asana task and drives it through implementation |
 | `asana-scout` | Two-pass cycle: drafts decision summaries for raw ideas (parallel), queues approved tasks for building (parallel) |
 
@@ -61,7 +60,7 @@ The end-to-end workflow requires human input at three points only:
 | 1 | **Human** | Drop a raw idea into the Asana **Ideas** section |
 | 2 | `asana-scout` | Drafts decision summaries and posts them for review (parallel across all ideas) |
 | 3 | **Human** | Move the card to **Approved** in Asana |
-| 4 | `asana-scout` | Queues approved tasks via `task-creator` (parallel across all approved tasks) |
+| 4 | `asana-scout` | Creates `[Feature]` tasks directly in Asana for all approved cards (parallel) |
 | 5 | `/process-backlog` | Fetches all queued tasks, builds each via `feature-builder`, updates Asana — fully automated |
 | 6 | **Human** | Review the completion report and verify in the browser |
 

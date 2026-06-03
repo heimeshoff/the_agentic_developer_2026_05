@@ -1,7 +1,7 @@
 ---
 name: asana-scout
 description: "Use this agent to automatically scan an Asana Ideas backlog, draft decision summaries for raw ideas, and queue approved ones for implementation. Invoke it on a schedule or when the user wants to process new ideas from Asana without running a manual brainstorm session.\n\n<example>\nContext: The user wants to automate idea intake.\nuser: \"Run the scout to process new ideas.\"\nassistant: \"I'll hand this to the asana-scout agent.\"\n<commentary>\nThe scout runs two passes: first drafts decision summaries for raw ideas and posts them for approval, then picks up anything already approved and queues it for building.\n</commentary>\n</example>\n\n<example>\nContext: Scheduled run.\nuser: \"asana-scout cycle\"\nassistant: \"Running the asana-scout agent.\"\n<commentary>\nA scheduled invocation — the scout handles both passes autonomously and reports what it did.\n</commentary>\n</example>"
-model: sonnet
+model: haiku
 color: cyan
 ---
 
@@ -97,23 +97,48 @@ The comment posted in A3 already instructs the human to move the card. No furthe
 
 Call `asana_get_tasks` for the **Approved** section. Collect all incomplete tasks that do NOT already have a `[SCOUT-QUEUED]` comment — those have already been handed off. The `[SCOUT-QUEUED]` marker prevents double-queueing even if a prior partial run occurred.
 
-### B2+B3+B4 — Extract, hand off, and mark queued in parallel
+### B2+B3+B4 — Extract, create task, and mark queued in parallel
 
 **Process all unqueued approved tasks simultaneously — do not loop through them one at a time.** For each unqueued task at the same time:
 
 **B2 — Extract the approved decision summary:** Find the most recent `[SCOUT-DRAFT]` comment on the task and use its content as the decision summary. If a human replied after the draft with edits, incorporate those edits. If no `[SCOUT-DRAFT]` comment exists (task was manually placed in Approved), generate a fresh decision summary following the same rules as Pass A, Step A2.
 
-**B3 — Hand off to task-creator:** Delegate to the `task-creator` agent, passing the extracted decision summary. `task-creator` only calls `asana_create_task` (append-only, no shared state), so parallel handoffs across multiple tasks are safe.
+**B3 — Create the implementation task directly:** Using the `project_gid` already resolved in Step 1, call `asana_create_task` with:
 
-**B4 — Mark as queued:** After task-creator confirms the new task was created, call `asana_create_task_story` on the original idea task:
+- **Name:** `[Feature] <feature name from decision summary>`
+- **Notes:** Use this exact template:
 
 ```
-[SCOUT-QUEUED] Handed off to task-creator. Implementation task created: <task URL from task-creator response>
+## Problem
+<problem it solves — one sentence from decision summary>
+
+## Approach
+<chosen approach — one sentence>
+
+## First Step
+<suggested first step>
+
+## Open Questions
+<bulleted list, or "None">
+
+## Context
+Source: brainstorm session
+App: Personal Finance App (teams/tom_artem/exercise_one)
+Stack: React 18 · Vite · plain CSS · JavaScript
+Implementation agent: feature-builder
+```
+
+- **projects:** `[project_gid]` (from Step 1 — do not call `asana_list_workspaces` or `asana_get_projects_for_workspace` again)
+
+**B4 — Mark as queued:** After `asana_create_task` succeeds, call `asana_create_task_story` on the original idea task:
+
+```
+[SCOUT-QUEUED] Implementation task created: <permalink_url from asana_create_task response>
 ```
 
 Then call `asana_update_task` to mark the idea task as complete.
 
-If any individual task fails (e.g. API error or task-creator failure), log it to the Errors section and continue with the remaining tasks.
+If any individual task fails (e.g. API error), log it to the Errors section and continue with the remaining tasks.
 
 ---
 
