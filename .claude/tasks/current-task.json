@@ -1,0 +1,18 @@
+{
+  "task_id": "task-004",
+  "title": "BudgetTracker multi-account manager",
+  "description": "Implement a BudgetTracker that manages a collection of BudgetAccounts and provides summary reporting.",
+  "language": "java",
+  "output_path": "teams/team-tom/exercise_1/src/main/java/com/teamtom/BudgetTracker.java",
+  "requirements": [
+    "BudgetTracker starts empty (no-arg constructor)",
+    "addAccount(BudgetAccount account) adds an account; throws IllegalArgumentException if account is null or if an account with the same name already exists",
+    "getAccount(String name) returns the BudgetAccount with that name, or throws IllegalArgumentException if not found",
+    "getAccounts() returns an unmodifiable list of all accounts",
+    "getTotalBalance() returns the sum of getBalance() across all accounts",
+    "getSummary() returns a multi-line String listing each account name and balance, plus a total line"
+  ],
+  "context": "Package is com.teamtom, Java 21. Depends on BudgetAccount (task-003) and Transaction (task-002).",
+  "assigned_by": "task-orchestrator",
+  "dependencies": ["task-003"]
+}
