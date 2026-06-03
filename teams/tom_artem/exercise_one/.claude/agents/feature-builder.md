@@ -37,13 +37,22 @@ Extract from the brainstorm decision summary (or the user's message):
 
 If the brief is missing or too vague to act on (no approach, no scope), ask one clarifying question before proceeding. Do not guess at scope.
 
-### Step 2 — read before writing
+### Step 2 — read before writing (parallel)
 
-Read all files that the feature will touch or depend on. Never assume file contents. At minimum, always read:
+Read all files the feature will touch or depend on **in one parallel batch — issue all reads simultaneously, not one file at a time**. Never assume file contents. At minimum, always include in the same parallel call:
 - `src/App.jsx`
-- Any existing component or utility the feature extends
+- `src/utils/apportion.js`
+- Every existing component or utility the feature extends
 
-State in one sentence what you found and how it affects your implementation plan.
+State in one sentence what you found in each file and how it affects your implementation plan.
+
+### Step 2.5 — parallel finance validation
+
+For any feature that introduces a new financial calculation, modifies split percentages, or computes monetary amounts: **spawn the `finance-expert` agent at the same time as you begin drafting your checklist in Step 3** — do not wait for it first. Pass it:
+- The feature name and chosen approach
+- The specific financial logic you plan to implement (the formula, rate, or rule)
+
+Run both concurrently. Incorporate any finance-expert findings into your checklist before moving to Step 4. If the feature has no financial calculations (purely UI layout, routing, or cosmetic changes), skip this step.
 
 ### Step 3 — plan the implementation
 

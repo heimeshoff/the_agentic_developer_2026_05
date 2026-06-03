@@ -38,16 +38,17 @@ If any section is missing, list what is missing and stop.
 
 ---
 
-## Pass A — Draft new ideas
+## Pass A — Draft new ideas (parallel)
 
 ### A1 — Fetch raw ideas
 
-Call `asana_get_tasks` for the **Ideas** section. For each incomplete task:
-- Skip any task that already has a comment containing the marker `[SCOUT-DRAFT]` — it has been processed already.
+Call `asana_get_tasks` for the **Ideas** section. Collect all incomplete tasks that do NOT already have a `[SCOUT-DRAFT]` comment — those are already processed.
 
-### A2 — Generate a draft decision summary
+### A2+A3 — Generate drafts and post comments in parallel
 
-For each unprocessed task, read its `name` and `notes`. Using only the information in the task (do not ask the user), produce a draft decision summary following this template:
+**Process all unprocessed tasks simultaneously — do not loop through them one at a time.** Issue all drafting and commenting operations in a single parallel batch. For each unprocessed task at the same time:
+
+**A2 — Generate a draft decision summary** using only the task's `name` and `notes` (do not ask the user):
 
 ```
 Feature: <task name>
@@ -63,9 +64,7 @@ Apply these defaults when information is missing:
 - Missing approach hint → default to the simplest UI change that fits the existing component structure
 - Ambiguous scope → flag it as an open question rather than assuming
 
-### A3 — Post the draft comment
-
-Call `asana_create_task_story` on the task with this body:
+**A3 — Post the draft comment** by calling `asana_create_task_story` on the task:
 
 ```
 [SCOUT-DRAFT] Draft decision summary — please review and move to "Approved" if this looks right, or reply with changes.
@@ -82,40 +81,39 @@ To approve: move this task to the "Approved" section in Asana.
 To request changes: reply to this comment with your edits.
 ```
 
+If any individual task fails (e.g. API error), log it to the Errors section of the final report and continue with the remaining tasks.
+
 ### A4 — Section move (human action required)
 
 The Asana MCP does not support moving tasks between sections. Do NOT attempt to call any tool to move the task — it will fail.
 
-Instead, the comment posted in A3 already instructs the human to move the card. No further action needed from this agent for Pass A.
+The comment posted in A3 already instructs the human to move the card. No further action needed from this agent for Pass A.
 
 ---
 
-## Pass B — Queue approved tasks
+## Pass B — Queue approved tasks (parallel)
 
 ### B1 — Fetch approved tasks
 
-Call `asana_get_tasks` for the **Approved** section. For each incomplete task:
-- Skip tasks that already have a comment containing `[SCOUT-QUEUED]` — they have been handed off already.
+Call `asana_get_tasks` for the **Approved** section. Collect all incomplete tasks that do NOT already have a `[SCOUT-QUEUED]` comment — those have already been handed off. The `[SCOUT-QUEUED]` marker prevents double-queueing even if a prior partial run occurred.
 
-### B2 — Extract the approved decision summary
+### B2+B3+B4 — Extract, hand off, and mark queued in parallel
 
-Find the most recent `[SCOUT-DRAFT]` comment on the task. Use its content as the decision summary. If a human replied after the draft with edits, incorporate those edits into the summary before passing it on.
+**Process all unqueued approved tasks simultaneously — do not loop through them one at a time.** For each unqueued task at the same time:
 
-If no `[SCOUT-DRAFT]` comment exists (task was manually placed in Approved without going through drafting), generate a fresh decision summary following the same rules as Pass A, Step A2.
+**B2 — Extract the approved decision summary:** Find the most recent `[SCOUT-DRAFT]` comment on the task and use its content as the decision summary. If a human replied after the draft with edits, incorporate those edits. If no `[SCOUT-DRAFT]` comment exists (task was manually placed in Approved), generate a fresh decision summary following the same rules as Pass A, Step A2.
 
-### B3 — Hand off to task-creator
+**B3 — Hand off to task-creator:** Delegate to the `task-creator` agent, passing the extracted decision summary. `task-creator` only calls `asana_create_task` (append-only, no shared state), so parallel handoffs across multiple tasks are safe.
 
-Delegate to the `task-creator` agent, passing the extracted decision summary. The task-creator will create a structured implementation task in Asana.
-
-### B4 — Mark as queued
-
-After task-creator confirms the new task was created, call `asana_create_task_story` on the original idea task:
+**B4 — Mark as queued:** After task-creator confirms the new task was created, call `asana_create_task_story` on the original idea task:
 
 ```
 [SCOUT-QUEUED] Handed off to task-creator. Implementation task created: <task URL from task-creator response>
 ```
 
 Then call `asana_update_task` to mark the idea task as complete.
+
+If any individual task fails (e.g. API error or task-creator failure), log it to the Errors section and continue with the remaining tasks.
 
 ---
 
