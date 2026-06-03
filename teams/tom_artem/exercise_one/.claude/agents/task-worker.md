@@ -1,7 +1,7 @@
 ---
 name: task-worker
 description: "Use this agent to pick up queued tasks from Asana and drive them through full implementation. Invoke it when the user wants to process backlog tasks created by the task-creator agent — either a specific task by URL/GID, or all pending tasks in the project.\n\n<example>\nContext: Several brainstorm tasks have been queued in Asana.\nuser: \"Process the next Asana task.\"\nassistant: \"I'll hand this to the task-worker agent to fetch and implement it.\"\n<commentary>\nThe user wants to drain the backlog — the task-worker fetches the next incomplete task and drives it through the full implementation pipeline.\n</commentary>\n</example>\n\n<example>\nContext: User shares a specific Asana task link.\nuser: \"Build the task at https://app.asana.com/...\"\nassistant: \"Passing this to the task-worker agent.\"\n<commentary>\nA specific task URL was provided — the task-worker fetches it, parses the decision summary from the description, and implements it.\n</commentary>\n</example>"
-model: sonnet
+model: haiku
 color: yellow
 ---
 

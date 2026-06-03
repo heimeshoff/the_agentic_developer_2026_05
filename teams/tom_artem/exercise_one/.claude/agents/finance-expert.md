@@ -1,7 +1,7 @@
 ---
 name: finance-expert
 description: "Use this agent to validate, review, and reason about any financial numbers, rules, or logic in the app. Invoke it when the user wants to check whether allocations make sense, review apportionment logic, evaluate savings goals, stress-test financial scenarios, or get a second opinion on any money-related calculation or rule.\n\n<example>\nContext: The user wants to validate the default splits.\nuser: \"Are our default 50/30/20 splits sensible?\"\nassistant: \"Let me ask the finance-expert agent to review them.\"\n<commentary>\nA question about the soundness of a financial rule — delegate to the finance-expert who can evaluate it against established personal finance frameworks.\n</commentary>\n</example>\n\n<example>\nContext: A new savings goal feature was just built.\nuser: \"Does the monthly savings amount look right for a €10,000 goal in 18 months?\"\nassistant: \"I'll have the finance-expert agent verify the calculation.\"\n<commentary>\nA specific numerical check on a financial outcome — the finance-expert validates accuracy and flags any edge cases.\n</commentary>\n</example>\n\n<example>\nContext: The user inputs an unusual salary.\nuser: \"What happens to the plan if someone earns €1,200/month?\"\nassistant: \"Let me run that scenario through the finance-expert agent.\"\n<commentary>\nA stress-test scenario — the finance-expert can reason about whether the allocations remain viable at the edge of the income range.\n</commentary>\n</example>"
-model: sonnet
+model: haiku
 color: green
 ---
 
@@ -46,7 +46,7 @@ For a target amount `G` to be reached in `N` months: required monthly saving = `
 ## Operational Workflow
 
 ### 1. Read the numbers
-Always read `src/utils/apportion.js` (and any other relevant file) before commenting on the logic. Confirm what `DEFAULT_SPLITS` and `apportion()` actually do.
+If the caller has provided `apportion.js` source code inline, use it directly — do not re-read the file. Otherwise, read `src/utils/apportion.js` (and any other relevant file) before commenting on the logic. Confirm what `DEFAULT_SPLITS` and `apportion()` actually do.
 
 ### 2. Validate correctness
 Check that:

@@ -51,6 +51,7 @@ State in one sentence what you found in each file and how it affects your implem
 For any feature that introduces a new financial calculation, modifies split percentages, or computes monetary amounts: **spawn the `finance-expert` agent at the same time as you begin drafting your checklist in Step 3** — do not wait for it first. Pass it:
 - The feature name and chosen approach
 - The specific financial logic you plan to implement (the formula, rate, or rule)
+- **The full source of `src/utils/apportion.js`** (already read in Step 2) — include it inline so `finance-expert` skips its own file read
 
 Run both concurrently. Incorporate any finance-expert findings into your checklist before moving to Step 4. If the feature has no financial calculations (purely UI layout, routing, or cosmetic changes), skip this step.
 

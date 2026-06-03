@@ -67,6 +67,22 @@ End with a clear, copy-paste-friendly summary block:
 
 ## Step 7 — offer to act
 
-Ask: "Ready to start building, or would you like to explore any part of this further?"
+Ask: "Ready to start building, queue it for later, or explore further?"
 
-If the user says to build, pass the decision summary from Step 6 to the **`feature-builder` agent**. Do not implement the feature yourself — the feature-builder handles the full implementation, build check, and test run, and will report back when complete.
+- **Build now:** pass the decision summary to the `feature-builder` agent. Do not implement it yourself — `feature-builder` handles the full implementation, build check, and test run.
+- **Queue for later:** call `asana_create_task` directly. Use `asana_list_workspaces` and `asana_get_projects_for_workspace` to resolve the **"Personal Finance App"** project GID, then create a task named `[Feature] <feature name>` with notes structured as:
+  ```
+  ## Problem
+  <problem it solves>
+  ## Approach
+  <chosen approach>
+  ## First Step
+  <suggested first step>
+  ## Open Questions
+  <bulleted list, or "None">
+  ## Context
+  Source: brainstorm session
+  App: Personal Finance App (teams/tom_artem/exercise_one)
+  Stack: React 18 · Vite · plain CSS · JavaScript
+  Implementation agent: feature-builder
+  ```
