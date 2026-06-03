@@ -1,0 +1,21 @@
+# Team-specific gitignore for Giocanda Team
+
+# Claude Code generated scripts
+claude.sh
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.log
+.env.local
+.env.*.local
