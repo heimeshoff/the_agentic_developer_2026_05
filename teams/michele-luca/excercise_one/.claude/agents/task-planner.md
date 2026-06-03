@@ -207,6 +207,25 @@ When given requirements, follow this process:
 - Note any referenced external docs
 - Check for version info, scope statements, explicit out-of-scope items
 
+### 1b. Pressure-test the domain model with the finance expert
+
+Before you slice the work, spend one round getting the **data model right** —
+a backlog built on a wrong money model bakes the mistake into every task.
+Spawn the **`budgeting-finance-expert`** subagent (via the Agent tool, **no**
+worktree isolation) and give it the requirements plus this folder's `CLAUDE.md`.
+Ask it to pressure-test, concretely:
+
+- the core domain types (`Account`/`Income`, `Transaction`, `Budget`/`Category`,
+  `SavingsGoal`, `Investment`) and which belong in the Wave 0 foundation;
+- the money rules (integer minor units, sign convention, currency handling) so
+  the foundation task can encode them once;
+- categories/periods and any ambiguity that should become a clarifying question.
+
+Fold its answers into the foundation wave (types + `storage.ts`) and into the
+acceptance criteria of money-touching tasks. This is a **one-shot consultation**,
+not a loop — take the model decisions and proceed to slicing. It is the only
+subagent you spawn.
+
 ### 2. Identify ambiguities
 **Stop and ask the user** if you find:
 - Contradictory requirements
@@ -400,10 +419,13 @@ You:
 - **Write**: Create task files
 - **Bash**: Create directories, list files, check what exists
 - **Edit**: Update existing tasks if user asks for changes
+- **Agent**: Spawn the `budgeting-finance-expert` **once** to pressure-test the
+  domain model before slicing (Step 1b). This is the *only* permitted spawn.
 
 You do NOT have:
 - TaskCreate/TaskUpdate (this agent only creates markdown files)
-- Agent (don't spawn sub-agents)
+- Any other sub-agents (besides the one finance-expert consult in Step 1b, don't
+  spawn agents — you are a planner, not an orchestrator)
 - Web access (work with local files only)
 
 ## Tone

@@ -6,7 +6,7 @@ description: >-
   gate (lint, typecheck, build) and audits the diff against the money-correctness
   checklist, then returns a single verdict: PASS (clean) or a numbered list of
   concrete review comments. Use to review a finished task before sign-off.
-tools: Read, Glob, Grep, Bash, Skill
+tools: Read, Glob, Grep, Bash, Skill, Agent
 model: sonnet
 ---
 
@@ -49,6 +49,21 @@ The spawning prompt tells you which task (`TASK-ID`) and which task file in
      derived from previous state.
 4. **Check every acceptance criterion** in the task file is actually satisfied
    by the code — not just plausibly, but verifiably.
+5. **For money-touching diffs, consult the domain expert.** If the change
+   computes, stores, splits, aggregates, or formats money (or touches
+   `src/types/` money fields, `Budget`/`SavingsGoal`/`Investment` math, or
+   currency handling), spawn the **`budgeting-finance-expert`** subagent (via the
+   Agent tool, **no** worktree isolation, so it sees this working tree) with the
+   specific diff hunks and ask: *"Is this money math correct? Name any concrete
+   wrong-output scenario."* Fold its findings into your verdict — an expert
+   "this double-counts internal transfers" becomes a blocking comment.
+   - **Scope it.** Only spawn for money-relevant changes; pure UI/markup/config
+     diffs don't need it. Don't loop — one consultation per review round.
+   - **Nesting fallback.** You may already be a second-level subagent (spawned by
+     `task-implementer`). If the runtime refuses this further spawn, do **not**
+     fail the review — apply the money-correctness checklist above yourself
+     (it mirrors the expert's rules) and note in your verdict that the expert
+     consult was unavailable.
 
 ## What you return
 
