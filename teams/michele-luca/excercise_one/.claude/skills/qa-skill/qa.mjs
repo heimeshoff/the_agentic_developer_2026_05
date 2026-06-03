@@ -18,11 +18,11 @@
 //                                     import/asset errors that tsc misses.
 //
 // Usage (run from the exercise folder teams/michele-luca/excercise_one/):
-//   node .claude/skills/qa-budget-app/qa.mjs            # all gates
-//   node .claude/skills/qa-budget-app/qa.mjs lint       # one gate
-//   node .claude/skills/qa-budget-app/qa.mjs types
-//   node .claude/skills/qa-budget-app/qa.mjs build
-//   node .claude/skills/qa-budget-app/qa.mjs lint --fix # eslint --fix then report
+//   node .claude/skills/qa-skill/qa.mjs            # all gates
+//   node .claude/skills/qa-skill/qa.mjs lint       # one gate
+//   node .claude/skills/qa-skill/qa.mjs types
+//   node .claude/skills/qa-skill/qa.mjs build
+//   node .claude/skills/qa-skill/qa.mjs lint --fix # eslint --fix then report
 //
 // Exit code: 0 if every selected gate passed, 1 otherwise. Use it in CI / hooks.
 

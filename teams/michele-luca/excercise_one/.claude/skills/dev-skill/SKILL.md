@@ -8,7 +8,7 @@ description: >-
   running app headlessly via Playwright + Microsoft Edge.
 ---
 
-# dev-budget-app
+# dev-skill
 
 Develop and **visually verify** team michele-luca's personal-finance / budgeting
 app — a single-page **React 19 + TypeScript 6 + Vite 8** app, local-first
@@ -51,14 +51,14 @@ It's ready when `/tmp/vite-dev.log` shows `VITE v8.x ready in NNN ms`. App is at
 the running server via `--url`, so it's fast — no respawn):
 
 ```bash
-# Screenshot the current render -> .claude/skills/dev-budget-app/last-shot.png
-node .claude/skills/dev-budget-app/driver.mjs shot --url http://localhost:5173/
+# Screenshot the current render -> .claude/skills/dev-skill/last-shot.png
+node .claude/skills/dev-skill/driver.mjs shot --url http://localhost:5173/
 
 # Read rendered DOM / localStorage (the app persists state there)
-node .claude/skills/dev-budget-app/driver.mjs eval --url http://localhost:5173/ "({ h1: document.querySelector('h1')?.textContent, lsKeys: Object.keys(localStorage) })"
+node .claude/skills/dev-skill/driver.mjs eval --url http://localhost:5173/ "({ h1: document.querySelector('h1')?.textContent, lsKeys: Object.keys(localStorage) })"
 
 # Drive a UI flow: click a selector, then screenshot the result
-node .claude/skills/dev-budget-app/driver.mjs click --url http://localhost:5173/ "button.counter" --out .claude/skills/dev-budget-app/after-click.png
+node .claude/skills/dev-skill/driver.mjs click --url http://localhost:5173/ "button.counter" --out .claude/skills/dev-skill/after-click.png
 ```
 
 **3. Actually open the screenshot** (Read the PNG). If it's blank or shows
@@ -70,7 +70,7 @@ git-ignored.
 on 5173 itself, screenshots, and kills the whole process tree on exit:
 
 ```bash
-node .claude/skills/dev-budget-app/driver.mjs shot
+node .claude/skills/dev-skill/driver.mjs shot
 ```
 
 ## Run (human path)
@@ -127,7 +127,7 @@ Follow the architecture in `CLAUDE.md`. In short:
 
 ## The driver
 
-`.claude/skills/dev-budget-app/driver.mjs` — Playwright + Edge harness.
+`.claude/skills/dev-skill/driver.mjs` — Playwright + Edge harness.
 Commands: `shot` (screenshot), `eval "<js>"` (run JS in page, print JSON),
 `click "<selector>"` (click + screenshot). Flags: `--url <U>` (connect to a
 running server instead of spawning), `--out <file>`, `--full` (full-page shot).

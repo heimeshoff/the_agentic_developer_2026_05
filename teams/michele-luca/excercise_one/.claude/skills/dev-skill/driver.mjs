@@ -10,47 +10,80 @@
 // devDependency in package.json.
 //
 // Two ways to point it at the app:
-//   - default: spawns `vite` on a fixed port, drives it, then kills it.
+//   - default: spawns `vite` on an AUTO-PICKED FREE port (starting at 5173),
+//     drives it, then kills it. Auto-free-port makes it safe to run several
+//     drivers in parallel (e.g. one per git worktree) without clashing.
 //   - --url <url>: connects to an ALREADY-running dev server (recommended
 //     while iterating — keep `npm run dev` up for hot reload, re-run the
 //     driver after each change).
 //
-// Usage (run from the exercise folder):
-//   node .claude/skills/dev-budget-app/driver.mjs shot [--url U] [--out F] [--full]
-//   node .claude/skills/dev-budget-app/driver.mjs eval [--url U] "<js expression>"
-//   node .claude/skills/dev-budget-app/driver.mjs click [--url U] "<selector>" [--out F]
+// Port control (only matters on the self-spawn path, not with --url):
+//   --port <n>   force an exact port (strict; fails if busy)
+//   DEV_PORT=<n> same, via env
+//   neither      auto-pick the first free port from 5173 up
 //
-// Screenshots default to .claude/skills/dev-budget-app/last-shot.png
+// Usage (run from the exercise folder):
+//   node .claude/skills/dev-skill/driver.mjs shot  [--url U] [--port N] [--out F] [--full]
+//   node .claude/skills/dev-skill/driver.mjs eval  [--url U] [--port N] "<js expression>"
+//   node .claude/skills/dev-skill/driver.mjs click [--url U] [--port N] "<selector>" [--out F]
+//   node .claude/skills/dev-skill/driver.mjs freeport [--port START]   # print a free port and exit
+//
+// Screenshots default to .claude/skills/dev-skill/last-shot.png
 
 import { chromium } from 'playwright';
 import { spawn, execSync } from 'node:child_process';
+import { createServer } from 'node:net';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_OUT = join(HERE, 'last-shot.png');
-const PORT = 5173;
-const SPAWN_URL = `http://localhost:${PORT}/`;
+const DEFAULT_PORT = 5173;
+
+// Find the first free TCP port at or above `start`. Lets parallel drivers each
+// grab their own port instead of all fighting over a hardcoded 5173.
+function findFreePort(start) {
+  return new Promise((resolve, reject) => {
+    const srv = createServer();
+    srv.once('error', (e) => {
+      if (e.code === 'EADDRINUSE') resolve(findFreePort(start + 1));
+      else reject(e);
+    });
+    srv.listen(start, '127.0.0.1', () => {
+      const { port } = srv.address();
+      srv.close(() => resolve(port));
+    });
+  });
+}
+
+// Resolve the self-spawn port: explicit --port / DEV_PORT wins (strict),
+// otherwise auto-pick a free one starting at DEFAULT_PORT.
+async function resolvePort(opts) {
+  if (opts.port) return opts.port;
+  if (process.env.DEV_PORT) return Number(process.env.DEV_PORT);
+  return findFreePort(DEFAULT_PORT);
+}
 
 function parseArgs(argv) {
   const cmd = argv[0];
-  const opts = { out: DEFAULT_OUT, full: false, url: null, rest: [] };
+  const opts = { out: DEFAULT_OUT, full: false, url: null, port: null, rest: [] };
   for (let i = 1; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--url') opts.url = argv[++i];
     else if (a === '--out') opts.out = argv[++i];
+    else if (a === '--port') opts.port = Number(argv[++i]);
     else if (a === '--full') opts.full = true;
     else opts.rest.push(a);
   }
   return { cmd, opts };
 }
 
-// Spawn `vite` on a fixed port and resolve once it reports "ready".
-function startDevServer() {
+// Spawn `vite` on the given port and resolve once it reports "ready".
+function startDevServer(port) {
   const npmCmd = process.platform === 'win32' ? 'npm.cmd' : 'npm';
   const child = spawn(
     npmCmd,
-    ['run', 'dev', '--', '--port', String(PORT), '--strictPort'],
+    ['run', 'dev', '--', '--port', String(port), '--strictPort'],
     { cwd: process.cwd(), stdio: ['ignore', 'pipe', 'pipe'], shell: process.platform === 'win32' }
   );
   return new Promise((resolve, reject) => {
@@ -80,8 +113,12 @@ function killTree(pid) {
 
 async function withPage(opts, fn) {
   let server = null;
-  const url = opts.url || SPAWN_URL;
-  if (!opts.url) server = await startDevServer();
+  let url = opts.url;
+  if (!url) {
+    const port = await resolvePort(opts);
+    url = `http://localhost:${port}/`;
+    server = await startDevServer(port);
+  }
   const browser = await chromium.launch({ channel: 'msedge', headless: true });
   try {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
@@ -101,7 +138,13 @@ async function withPage(opts, fn) {
 async function main() {
   const { cmd, opts } = parseArgs(process.argv.slice(2));
 
-  if (cmd === 'shot') {
+  if (cmd === 'freeport') {
+    // Reserve a port for a background `npm run dev` when running in parallel:
+    //   PORT=$(node driver.mjs freeport); npm run dev -- --port $PORT --strictPort &
+    //   node driver.mjs shot --url http://localhost:$PORT/
+    const p = await findFreePort(opts.port || DEFAULT_PORT);
+    console.log(p);
+  } else if (cmd === 'shot') {
     await withPage(opts, async (page) => {
       await page.screenshot({ path: opts.out, fullPage: opts.full });
       console.log('screenshot ->', opts.out);
@@ -127,10 +170,11 @@ async function main() {
       console.log('clicked', selector, '-> screenshot', opts.out);
     });
   } else {
-    console.error('Unknown command. Use: shot | eval | click');
-    console.error('  node .claude/skills/dev-budget-app/driver.mjs shot [--url U] [--out F] [--full]');
-    console.error('  node .claude/skills/dev-budget-app/driver.mjs eval [--url U] "<js>"');
-    console.error('  node .claude/skills/dev-budget-app/driver.mjs click [--url U] "<selector>" [--out F]');
+    console.error('Unknown command. Use: shot | eval | click | freeport');
+    console.error('  node .claude/skills/dev-skill/driver.mjs shot  [--url U] [--port N] [--out F] [--full]');
+    console.error('  node .claude/skills/dev-skill/driver.mjs eval  [--url U] [--port N] "<js>"');
+    console.error('  node .claude/skills/dev-skill/driver.mjs click [--url U] [--port N] "<selector>" [--out F]');
+    console.error('  node .claude/skills/dev-skill/driver.mjs freeport [--port START]');
     process.exit(2);
   }
 }

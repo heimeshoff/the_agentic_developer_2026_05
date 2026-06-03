@@ -16,9 +16,9 @@ driver that gives a single pass/fail verdict. There is no unit-test runner
 installed yet (no `test` script, no vitest), so "QA" here means exactly those
 three gates plus a human/agent review pass against the checklist below.
 
-This is the **review** companion to the `dev-budget-app` skill (which *drives
+This is the **review** companion to the `dev-skill` skill (which *drives
 the running app* via Playwright to verify behaviour). Use this one to gate code
-quality; use `dev-budget-app` to confirm a feature actually renders/works.
+quality; use `dev-skill` to confirm a feature actually renders/works.
 
 All paths below are relative to the exercise folder
 `teams/michele-luca/excercise_one/`. Run everything from there.
@@ -40,16 +40,16 @@ One command, runs all three gates, prints a summary, exits non-zero if any
 fail. This is the pre-commit / pre-PR check:
 
 ```bash
-node .claude/skills/qa-budget-app/qa.mjs
+node .claude/skills/qa-skill/qa.mjs
 ```
 
 Run a single gate when iterating:
 
 ```bash
-node .claude/skills/qa-budget-app/qa.mjs lint        # eslint .
-node .claude/skills/qa-budget-app/qa.mjs types       # tsc -b --force
-node .claude/skills/qa-budget-app/qa.mjs build        # vite build
-node .claude/skills/qa-budget-app/qa.mjs lint --fix  # auto-fix lint, then report
+node .claude/skills/qa-skill/qa.mjs lint        # eslint .
+node .claude/skills/qa-skill/qa.mjs types       # tsc -b --force
+node .claude/skills/qa-skill/qa.mjs build        # vite build
+node .claude/skills/qa-skill/qa.mjs lint --fix  # auto-fix lint, then report
 ```
 
 A green run ends with `✓ all 3 gate(s) passed.` and exit 0. A failure prints
@@ -100,7 +100,7 @@ diff, check these invariants (from the project's `CLAUDE.md` architecture):
   dependency arrays and state updates derived from previous state.
 
 After the static gates pass, if the change is user-visible, hand off to
-`dev-budget-app` to screenshot the running result — gates green ≠ feature
+`dev-skill` to screenshot the running result — gates green ≠ feature
 works.
 
 ## Gotchas (battle scars from building this skill)
